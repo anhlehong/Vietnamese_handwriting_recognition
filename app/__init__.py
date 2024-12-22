@@ -1,18 +1,25 @@
 from flask import Flask
-from app.routes.main import main
-import os
-
+from app.model.vnocr import load_model
 
 def create_app():
     app = Flask(__name__)
-    app.config['UPLOAD_FOLDER'] = 'app/static/uploads' 
-    app.config['PROCESSED_FOLDER'] = 'app/static/processed'
-    app.config['LINE_FOLDER'] = 'app/static/line'  
 
-    # Đảm bảo các thư mục tồn tại
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-    os.makedirs(app.config['PROCESSED_FOLDER'], exist_ok=True)
-    os.makedirs(app.config['LINE_FOLDER'], exist_ok=True)
+    # Cấu hình các thư mục
+    app.config['UPLOAD_FOLDER'] = './uploads'
+    app.config['PROCESSED_FOLDER'] = './static/processed'
+    app.config['LINE_FOLDER'] = './static/line'
+    app.config['MODEL_FOLDER'] = './app/model'
 
+    # Tải model chỉ một lần khi ứng dụng khởi chạy
+    print("Loading model...")
+    model_folder = app.config['MODEL_FOLDER']
+    model, char_list = load_model(model_folder)
+    app.config['MODEL'] = model
+    app.config['CHAR_LIST'] = char_list
+    print("Model loaded successfully!")
+
+    # Đăng ký blueprint
+    from app.routes.main import main
     app.register_blueprint(main)
+
     return app

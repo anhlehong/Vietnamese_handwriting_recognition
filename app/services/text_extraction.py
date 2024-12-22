@@ -55,6 +55,7 @@ def extract_lines(image, output_folder, output_width=1854, output_height=103, ba
     contours = sorted(contours, key=lambda ctr: cv2.boundingRect(ctr)[1])
 
     processed_images = []
+    lines = []
     index = 1
     for i, ctr in enumerate(contours):
         x, y, w, h = cv2.boundingRect(ctr)
@@ -84,7 +85,8 @@ def extract_lines(image, output_folder, output_width=1854, output_height=103, ba
         output_path = f"{output_folder}/line_{index}.png"
         cv2.imwrite(output_path, new_image)
         processed_images.append(output_path)
+        lines.append(new_image)
         index = index + 1
 
-    return processed_images
+    return processed_images, lines
 
