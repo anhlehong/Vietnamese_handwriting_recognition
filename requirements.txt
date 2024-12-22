@@ -3,3 +3,8 @@ opencv-python-headless
 numpy
 Pillow
 matplotlib
+tensorflow
+requests
+gdown
+python-dotenv
+requests

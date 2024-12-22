@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Viewer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <h1>Generated Markdown Content</h1>
+    <!-- Div chứa nội dung Markdown -->
+    <div id="markdownContent" style="display: none;">{{ markdown_content | safe }}</div>
+    <!-- Div hiển thị nội dung đã chuyển đổi -->
+    <div id="htmlOutput" class="html-output"></div>
+
+    <!-- Nút lưu file -->
+    <button onclick="saveToFile()">Lưu file result.md</button>
+
+    <!-- Liên kết tới thư viện JS -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="{{ url_for('static', filename='js/convert.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/save.js') }}"></script>
+</body>
+</html>
