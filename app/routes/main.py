@@ -1,11 +1,25 @@
 import os
 import shutil
-from flask import Blueprint, render_template, request, current_app
+from flask import Blueprint, render_template, request, current_app, jsonify
 from app.services.text_extraction import extract_lines, process_and_invert_image
 from app.model.pedict import predict
 import cv2
+from dotenv import load_dotenv
+import requests
 
 main = Blueprint('main', __name__)
+
+env_path = os.path.join(os.path.dirname(__file__), '.env.local')
+print("env_path: ", env_path)
+
+# Tải các biến môi trường từ tệp .env.local
+load_dotenv(dotenv_path=env_path)
+
+# Truy cập các biến môi trường
+API_KEY = os.getenv('API_KEY')
+GEMINI_API_URL = os.getenv('GEMINI_API_URL')
+debug_mode = os.getenv('DEBUG')
+print("API_KEY: ", API_KEY)
 
 @main.route('/')
 def home():
@@ -40,6 +54,7 @@ def home():
     clear_and_recreate_folder(upload_folder)
 
     return render_template('upload.html')
+
 
 @main.route('/upload', methods=['POST'])
 def upload_file():
@@ -79,13 +94,62 @@ def upload_file():
     texts = []
     for line in lines:
         texts.append(predict(model, char_list, line))
-    print(texts)
+    print("texts: ", texts)
     
-    # Tạo đường dẫn URL cho ảnh đã xử lý và các dòng văn bản
-    processed_image_url = f"static/processed/{os.path.basename(image_invert_path)}"
-    line_urls = [
-        f"static/line/{os.path.basename(img)}" for img in processed_images
-    ]
-    
-    # Render kết quả
-    return render_template('result.html', inverted_image=processed_image_url, lines=line_urls)
+    content = "; ".join(texts)
+    prompt = (
+        f"Sửa lại nội dung sau cho đúng ngữ nghĩa, ngữ pháp tiếng Việt. với dấu ; là kết thúc mỗi câu, yêu cầu đầy đủ nội dung."
+        f"Viết lại cho hoàn chỉnh cấu trúc file markdown. Không nói gì thêm. "
+        f"Nội dung là: {content}"
+    )
+
+    print("prompt: ", prompt)
+    if not prompt:
+        return jsonify({"error": "Câu hỏi là bắt buộc"}), 400
+
+    headers = {
+        "Content-Type": "application/json",
+    }
+    payload = {
+        "contents": [
+            {
+                "parts": [{"text": prompt}]
+            }
+        ]
+    }
+    print(headers)
+    print(payload)
+    print(f"{os.getenv('GEMINI_API_URL')}?key={os.getenv('API_KEY')}")
+    print(API_KEY)
+    print(GEMINI_API_URL)
+    try:
+        response = requests.post(
+            f"{os.getenv('GEMINI_API_URL')}?key={os.getenv('API_KEY')}",
+            headers=headers,
+            json=payload
+        )
+        response.raise_for_status()  # Kiểm tra lỗi HTTP
+        data = response.json()
+        print("data: ", data)
+        
+        # Tạo đường dẫn URL cho ảnh đã xử lý và các dòng văn bản
+        processed_image_url = f"static/processed/{os.path.basename(image_invert_path)}"
+        line_urls = [
+            f"static/line/{os.path.basename(img)}" for img in processed_images
+        ]
+
+        # Extract the markdown content from the response
+        markdown_content = data['candidates'][0]['content']['parts'][0]['text']
+        
+        # Loại bỏ ký tự không mong muốn ở đầu và cuối
+        if markdown_content.startswith("```markdown"):
+            markdown_content = markdown_content[len("```markdown"):].strip()
+        if markdown_content.endswith("```"):
+            markdown_content = markdown_content[:-len("```")].strip()
+        print("markdown_content: \n", markdown_content)
+
+        return render_template('display.html', markdown_content=markdown_content)
+            
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": str(e)}), 500
+
