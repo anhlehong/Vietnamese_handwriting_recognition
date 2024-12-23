@@ -94,3 +94,64 @@ def change_background_to_white(image, threshold=200):
     image[mask] = [255, 255, 255]
     return image
 
+def add_padding(image, target_width, target_height, background_color):
+    original_height, original_width = image.shape[:2]
+
+    # Nếu chiều rộng lớn hơn 1854, resize về 1854 và tính chiều cao tương ứng
+    if original_width > 1854:
+        scaling_factor = 1854 / original_width
+        new_width = 1854
+        new_height = int(original_height * scaling_factor)
+        image = cv2.resize(image, (new_width, new_height), interpolation=cv2.INTER_AREA)
+        original_height, original_width = image.shape[:2]
+
+    # Tính toán padding
+    padding_top = (target_height - original_height) // 2
+    padding_bottom = target_height - original_height - padding_top
+    padding_left = 0
+    padding_right = target_width - original_width
+
+    if padding_right < 0 or padding_bottom < 0 or padding_top < 0:
+        raise ValueError("Target size must be larger than the original size.")
+
+    # Thêm padding vào ảnh
+    padded_image = cv2.copyMakeBorder(
+        image,
+        top=padding_top,
+        bottom=padding_bottom,
+        left=padding_left,
+        right=padding_right,
+        borderType=cv2.BORDER_CONSTANT,
+        value=background_color
+    )
+
+    return padded_image
+
+def shadow_removal(image):
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    # Áp dụng Otsu Thresholding để tách nền và chữ
+    _, binary = cv2.threshold(image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+    # Làm mờ nền bằng Gaussian Blur
+    blurred = cv2.GaussianBlur(image, (21, 21), 0)
+
+    # Trừ nền để giữ lại chi tiết
+    normalized = cv2.divide(image, blurred, scale=255)
+
+    # Làm sáng nền bằng cách tăng giá trị cường độ sáng
+    bright_background = cv2.add(normalized, 20)
+
+    # Chỉnh gamma để làm sáng nền
+    gamma = 1.5
+    gamma_correction = ((bright_background / 255.0) ** (1 / gamma)) * 255
+    bright_corrected = gamma_correction.astype(np.uint8)
+
+    # Chỉ áp dụng làm sáng lên nền bằng cách sử dụng mask
+    result = cv2.bitwise_and(bright_corrected, bright_corrected, mask=~binary)
+    result = cv2.bitwise_or(result, binary)
+
+    threshold = 240  # Ngưỡng để xác định màu trắng
+    binary_to_black = np.where(result < threshold, 0, 255).astype("uint8")
+
+    return binary_to_black

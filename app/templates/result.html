@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Processed Image</title>
+  </head>
+  <body>
+    <h1>Processed Image and Extracted Lines</h1>
+
+    <h2>Processed Image</h2>
+    <div>
+      <img
+        src="{{ inverted_image }}"
+        alt="Processed Image"
+        style="max-width: 100%; height: auto"
+      />
+    </div>
+
+    <h2>Extracted Lines</h2>
+    <div>
+      {% for line in lines %}
+      <div style="margin-bottom: 20px">
+        <h3>Line {{ loop.index }}</h3>
+        <img
+          src="../../{{ line }}"
+          alt="Extracted Line {{ loop.index }}"
+          style="max-width: 100%; height: auto"
+        />
+      </div>
+      {% endfor %}
+    </div>
+
+    <h2>Extracted Text Content</h2>
+    <div style="margin-top: 20px; font-family: Arial, sans-serif">
+      {% if contents %} {% for content in contents %}
+      <p>{{ content }}</p>
+      {% endfor %} {% else %}
+      <p>No content extracted.</p>
+      {% endif %}
+    </div>
+
+    <a href="/">Upload Another Image</a>
+  </body>
+</html>

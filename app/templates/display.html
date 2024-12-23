@@ -1,24 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Markdown Viewer</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-</head>
-<body>
-    <h1>Generated Markdown Content</h1>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+    <link rel="stylesheet" href="../static/css/styles.css" />
+  </head>
+  <body>
+    <div>
+      <header class="header">
+        <a href="/"><h1>ObsiWriter</h1></a>
+        <!-- <nav class="menu">
+          <a href="#home">Home</a>
+          <a href="#features">Features</a>
+          <a href="#contact">Contact</a>
+        </nav> -->
+      </header>
+
+      <!-- <h1 style="text-align: center; margin-top: 20px">
+        Generated Markdown Content
+      </h1> -->
+
+      <div class="image-container">
+        <!-- Ảnh gốc -->
+        <div class="image-preview">
+          <img id="originalImage" src="{{ upload_image }}"
+ alt="Original Image" />
+          <p class="image-caption">Ảnh gốc</p>
+        </div>
+        <!-- Ảnh đã xử lý -->
+        <div class="image-preview">
+          <img src="{{ inverted_image }}" alt="Processed Image" />
+          <p class="image-caption">Ảnh đã xử lý</p>
+        </div>
+        <!-- Khung chứa văn bản -->
+        <div class="image-preview">
+          <div id="textOutput" class="text-output">
+            {% if contents %}
+            {% for content in contents %}
+            <p>{{ content }}</p>
+            {% endfor %}
+            {% else %}
+            <p>Không có nội dung được trích xuất.</p>
+            {% endif %}
+          </div>
+          <p class="image-caption">Dự đoán</p>
+        </div>
+      </div>
+
     <!-- Div chứa nội dung Markdown -->
-    <div id="markdownContent" style="display: none;">{{ markdown_content | safe }}</div>
+    <div id="markdownContent" style="display: none">
+      {{ markdown_content | safe }}
+    </div>
     <!-- Div hiển thị nội dung đã chuyển đổi -->
-    <div id="htmlOutput" class="html-output"></div>
+    <!-- <div id="htmlOutput" class="html-output"></div> -->
+    <div class="html-output">
+      <h2>Nội dung Markdown</h2>
+      <div class="html-content" id="htmlContent">
+      </div>
+    </div>
 
     <!-- Nút lưu file -->
-    <button onclick="saveToFile()">Lưu file result.md</button>
+    <div class="button-container">
+        <button><a href="/">Tải ảnh khác</a></button>
+        <button onclick="saveToFile()">Lưu file result.md</button>
+      </div>
+
 
     <!-- Liên kết tới thư viện JS -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="{{ url_for('static', filename='js/convert.js') }}"></script>
     <script src="{{ url_for('static', filename='js/save.js') }}"></script>
-</body>
+    <script>
+        // Đợi ảnh gốc tải xong và tính chiều cao
+        window.onload = function () {
+  const originalImage = document.getElementById("originalImage");
+  const textOutput = document.getElementById("textOutput");
+
+  // Kiểm tra nếu ảnh đã tải xong
+  if (originalImage.complete) {
+    // Nếu ảnh đã tải xong, lấy chiều cao
+    const imageHeight = originalImage.clientHeight; // Chiều cao của ảnh gốc
+    console.log("Chiều cao ảnh gốc:", imageHeight);
+    textOutput.style.height = `${imageHeight}px`; // Gán chiều cao cho khung văn bản
+  } else {
+    // Nếu ảnh chưa tải, gắn sự kiện onload
+    originalImage.onload = () => {
+      const imageHeight = originalImage.clientHeight; // Chiều cao của ảnh gốc
+      console.log("Chiều cao ảnh gốc sau khi tải:", imageHeight);
+      textOutput.style.height = `${imageHeight}px`; // Gán chiều cao cho khung văn bản
+    };
+  }
+};
+    </script>
+  </body>
 </html>

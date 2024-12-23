@@ -5,10 +5,10 @@ def create_app():
     app = Flask(__name__)
 
     # Cấu hình các thư mục
-    app.config['UPLOAD_FOLDER'] = './uploads'
-    app.config['PROCESSED_FOLDER'] = './static/processed'
-    app.config['LINE_FOLDER'] = './static/line'
-    app.config['MODEL_FOLDER'] = './app/model'
+    app.config['UPLOAD_FOLDER'] = 'app/static/uploads' 
+    app.config['PROCESSED_FOLDER'] = 'app/static/processed'
+    app.config['LINE_FOLDER'] = 'app/static/line'
+    app.config['MODEL_FOLDER'] = 'app/model'
 
     # Tải model chỉ một lần khi ứng dụng khởi chạy
     print("Loading model...")

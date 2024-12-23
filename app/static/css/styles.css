@@ -1,29 +1,157 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    line-height: 1.6;
-}
-
-.html-output {
-    white-space: pre-wrap;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    padding: 15px;
-    border-radius: 5px;
-    font-family: 'Arial', sans-serif;
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 60px;
+  gap: 15px;
 }
 
 button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #fff;
-    background-color: #007BFF;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #8b6cef;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
 }
 
 button:hover {
-    background-color: #0056b3;
+  background-color: #9478f0;
+}
+
+button a {
+  text-decoration: none;
+  color: #fff;
+  font-size: inherit;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #8b6cef;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #9478f0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #8b6cef;
+  color: white;
+  height: 50px;
+  padding: 10px 20px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.header .menu {
+  display: flex;
+  gap: 15px;
+}
+
+.header a {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.header a:hover {
+  background-color: #9478f0;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 20px;
+  gap: 20px;
+}
+
+.image-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 380px;
+}
+
+.image-preview img {
+  max-width: 100%;
+  border-radius: 10px;
+}
+
+.image-caption {
+  margin-top: 10px;
+  font-size: 1rem;
+  text-align: center;
+  color: #555;
+}
+
+.text-output {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 360px; /* Chiều rộng cố định */
+  padding: 0 10px;
+  border-radius: 10px; /* Bo góc khung */
+  background-color: #fff; /* Nền trắng */
+  color: #333; /* Màu chữ */
+  overflow: auto; /* Hiển thị thanh cuộn nếu nội dung quá dài */
+}
+
+/* CSS cho khung hiển thị Markdown */
+.html-output {
+  margin: 20px auto; /* Căn giữa theo chiều ngang */
+  padding: 20px; /* Khoảng cách nội dung bên trong */
+  width: 90%; /* Chiều rộng khung */
+  max-width: 1200px; /* Giới hạn chiều rộng tối đa */
+  border: 1px solid #ccc; /* Viền khung */
+  border-radius: 10px; /* Bo góc */
+  background-color: #f4f4f4; /* Nền xám nhạt */
+  color: #333; /* Màu chữ */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+  overflow: auto; /* Hiển thị thanh cuộn nếu nội dung quá dài */
+  font-family: monospace; /* Kiểu chữ monospace */
+  line-height: 1.6; /* Khoảng cách dòng */
+}
+
+/* Khung riêng bên trong mỗi đoạn nội dung */
+.html-content {
+  background-color: #e8e8e8; /* Nền xám nhạt hơn */
+  padding: 15px; /* Khoảng cách nội dung bên trong */
+  border-radius: 8px; /* Bo góc */
+  border: 1px solid #d3d3d3; /* Viền nhẹ */
+  overflow-x: auto; /* Thanh cuộn ngang cho nội dung dài */
+  white-space: pre-wrap; /* Giữ định dạng gốc, cho phép xuống dòng */
+  font-family: monospace; /* Kiểu chữ monospace */
+  margin: 10px 0; /* Khoảng cách giữa các đoạn */
 }

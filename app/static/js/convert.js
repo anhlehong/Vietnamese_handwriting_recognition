@@ -1,9 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const markdownContent = document.getElementById('markdownContent').innerText;
+  const markdownContent = document.getElementById("markdownContent").innerText;
 
-    // Sử dụng thư viện `marked` để chuyển Markdown sang HTML
-    const htmlOutput = marked.parse(markdownContent);
+  // Sử dụng thư viện `marked` để chuyển Markdown sang HTML
+  const htmlOutput = marked.parse(markdownContent);
 
-    // Hiển thị kết quả HTML trong div đầu ra
-    document.getElementById('htmlOutput').innerHTML = htmlOutput;
+  // Hiển thị kết quả HTML trong div đầu ra
+  document.getElementById("htmlContent").innerHTML = htmlOutput;
 });

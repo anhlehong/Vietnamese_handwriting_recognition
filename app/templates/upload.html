@@ -1,13 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>Upload Image</title>
-</head>
-<body>
-    <h1>Upload an Image</h1>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept="image/*">
-        <button type="submit">Upload</button>
-    </form>
-</body>
+  <head>
+    <title>ObsiWriter</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 90vh;
+        height: 100%;
+        background-image: url("../static/img/back.png");
+        background-size: cover;
+        background-position: left;
+        background-repeat: no-repeat;
+        font-family: Arial, sans-serif;
+        color: white;
+      }
+
+      .content {
+        position: absolute;
+        top: 50%;
+        left: 5%;
+        transform: translateY(-50%);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 2.5rem;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      /* Gradient chữ */
+      h1 span {
+        background: linear-gradient(to bottom, #8ab4ff, #e492ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+        animation: wave 1.5s infinite;
+      }
+
+      /* Định nghĩa hiệu ứng nhấp nhô */
+      @keyframes wave {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      /* Thêm độ trễ cho từng ký tự trong tiêu đề */
+      h1 span {
+        animation-delay: calc(var(--index) * 0.1s);
+      }
+
+      form {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Ẩn nút file mặc định */
+      input[type="file"] {
+        display: none;
+      }
+
+      /* Nút custom để chọn file */
+      .custom-file-upload {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #fff;
+        color: black;
+        width: 200px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .custom-file-upload:hover {
+        background-color: #ababab;
+      }
+
+      button {
+        padding: 11px 20px;
+        background-color: #8b6cef;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #9d83f1;
+      }
+
+      .file-name {
+        margin-top: 10px;
+        color: white;
+        font-size: 0.9rem;
+        font-style: italic;
+      }
+
+      .intro-container {
+        position: absolute;
+        top: 120px;
+        right: 40px;
+        max-width: 50%;
+        text-align: center;
+        word-wrap: break-word;
+      }
+
+      .intro {
+        margin-top: 50px;
+        text-align: center;
+        font-size: 1.2rem;
+        line-height: 2.5;
+      }
+      .image-preview {
+        margin-bottom: 20px;
+        width: 325px;
+        height: 300px;
+        border: 2px solid white;
+        border-radius: 10px;
+        display: none; /* Ẩn khung mặc định */
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .image-preview img {
+        max-width: 100%;
+        max-height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="intro-container">
+      <h1 id="title">Chào mừng đến với <span>ObsiWriter</span></h1>
+      <p class="intro">
+        ObsiWriter giúp bạn chuyển đổi chữ viết tay thành tài liệu Markdown,
+        tích hợp liền mạch với Obsidian. Hãy tải lên hình ảnh chữ viết tay và để
+        công cụ của chúng tôi xử lý nhanh chóng, chính xác, giúp bạn tiết kiệm
+        thời gian và nâng cao hiệu quả làm việc.
+      </p>
+    </div>
+    <div class="content">
+      <form action="/upload" method="post" enctype="multipart/form-data">
+        <div class="image-preview" id="image-preview"></div>
+        <div>
+          <label for="file-upload" class="custom-file-upload">Chọn tệp</label>
+          <button type="submit">Tải Lên</button>
+        </div>
+        <input
+          id="file-upload"
+          type="file"
+          name="file"
+          accept="image/*"
+          onchange="showFileName(); previewImage();"
+        />
+        <p id="file-name" class="file-name">Chưa có tệp nào được chọn</p>
+      </form>
+    </div>
+    <script>
+      // Hiển thị tên file khi người dùng chọn
+      function showFileName() {
+        const input = document.getElementById("file-upload");
+        const fileName = document.getElementById("file-name");
+        if (input.files.length > 0) {
+          fileName.textContent = `Tệp đã chọn: ${input.files[0].name}`;
+        } else {
+          fileName.textContent = "Chưa có tệp nào được chọn";
+        }
+      }
+
+      // Tách từng ký tự trong tiêu đề <h1> để áp dụng hiệu ứng nhấp nhô
+      const titleText = document.getElementById("title");
+      const textContent = titleText.textContent;
+      titleText.innerHTML = ""; // Xóa nội dung cũ
+
+      // Tạo span cho từng ký tự
+      [...textContent].forEach((char, index) => {
+        const span = document.createElement("span");
+        span.textContent = char === " " ? "\u00A0" : char; // Xử lý khoảng trắng
+        span.style.setProperty("--index", index); // Gán thứ tự ký tự
+        span.style.background = "linear-gradient(to bottom, #8ab4ff, #e492ff)";
+        span.style.webkitBackgroundClip = "text";
+        span.style.webkitTextFillColor = "transparent";
+        titleText.appendChild(span);
+      });
+
+      // Hiển thị ảnh trong khung preview
+      function previewImage() {
+        const input = document.getElementById("file-upload");
+        const preview = document.getElementById("image-preview");
+
+        if (input.files && input.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            // Hiển thị khung
+            preview.style.display = "flex";
+
+            // Xóa nội dung cũ
+            preview.innerHTML = "";
+            // Tạo thẻ img và gắn dữ liệu hình ảnh
+            const img = document.createElement("img");
+            img.src = e.target.result;
+            preview.appendChild(img);
+          };
+          reader.readAsDataURL(input.files[0]);
+        } else {
+          // Ẩn khung nếu không có ảnh
+          preview.style.display = "none";
+        }
+      }
+    </script>
+  </body>
 </html>
