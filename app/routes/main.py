@@ -106,7 +106,7 @@ def upload_file():
     
     prompt = (
         f"Quên hết những gì trước đó và sửa lại nội dung sau cho đúng ngữ nghĩa, ngữ pháp tiếng Việt. với hai dấu ;; là kết thúc mỗi dòng, kiếm tra xem dòng sau có tiếp tục dòng trước không, nếu tiếp tục thì nó là một câu, Không liên quan thì nó là câu mới thì xuống dòng, yêu cầu đầy đủ nội dung và xóa hai dấu ;;."
-        f"Viết lại cho hoàn chỉnh cấu trúc file markdown. Không được thêm bất cứ nội dung gì khác."
+        f"Viết lại cho hoàn chỉnh cấu trúc file markdown. Không tự ý thêm bất cứ thứ gì. Chỉ trả về nội dung đã đưa vào."
         f"Nội dung là: {content}"
     )
 
@@ -148,14 +148,13 @@ def upload_file():
         # Extract the markdown content from the response
         markdown_content = data['candidates'][0]['content']['parts'][0]['text']
         # markdown_content = content
-        
+
         # Loại bỏ ký tự không mong muốn ở đầu và cuối
         if markdown_content.startswith("```markdown"):
             markdown_content = markdown_content[len("```markdown"):].strip()
         if markdown_content.endswith("```"):
             markdown_content = markdown_content[:-len("```")].strip()
-        print("markdown_content: \n", markdown_content)
-
+        markdown_content = markdown_content.lstrip()
         return render_template('display.html', markdown_content=markdown_content, contents=texts, inverted_image=processed_image_url ,upload_image=upload_image_url)
             
     except requests.exceptions.RequestException as e:
