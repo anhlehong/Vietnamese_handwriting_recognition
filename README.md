@@ -4,8 +4,12 @@ A web application for recognizing handwritten Vietnamese text from images, integ
 
 ## Application Interface
 
-- Home Page: ![Home Page](https://res.cloudinary.com/dapvvdxw7/image/upload/v1750269266/home_ipz02k.png)
-- Recognition Page: ![Recognition Page](https://res.cloudinary.com/dapvvdxw7/image/upload/v1750269279/recognition_nyzbru.png)
+1. **Home Page**  
+   ![Home Page](https://res.cloudinary.com/dapvvdxw7/image/upload/v1750269266/home_ipz02k.png)
+
+2. **Recognition Page**  
+   ![Recognition Page](https://res.cloudinary.com/dapvvdxw7/image/upload/v1750269279/recognition_nyzbru.png)
+
 
 ## Prerequisites
 
@@ -41,8 +45,7 @@ A web application for recognizing handwritten Vietnamese text from images, integ
      4. Generate an API key under **Credentials**.
 
 4. **Prepare the CRNN Model**:
-   - Run the code in this [Kaggle notebook](https://www.kaggle.com/code/daclongml/crnn-ocr) to train the CRNN model.
-   - If the model is not downloaded, it will be automatically fetched when running the notebook.
+   - If the model is not downloaded, it will be automatically fetched when running the code.
 
 ## Usage
 
