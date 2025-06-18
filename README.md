@@ -4,11 +4,14 @@ A web application for recognizing handwritten Vietnamese text from images, integ
 
 ## Application Interface
 
-1. **Home Page**  
-   ![Home Page](https://res.cloudinary.com/dapvvdxw7/image/upload/v1750269266/home_ipz02k.png)
+1. **Home Page**
 
-2. **Recognition Page**  
-   ![Recognition Page](https://res.cloudinary.com/dapvvdxw7/image/upload/v1750269279/recognition_nyzbru.png)
+![Home Page](https://res.cloudinary.com/dapvvdxw7/image/upload/v1750269266/home_ipz02k.png)
+
+2. **Recognition Page**
+
+![Recognition Page](https://res.cloudinary.com/dapvvdxw7/image/upload/v1750269279/recognition_nyzbru.png)
+
 
 
 ## Prerequisites
